@@ -344,7 +344,7 @@ function New-AzureResources {
                --name $planName `
                --resource-group $ResourceGroupName `
                --location $Location `
-               --sku "B1"
+               --sku "F1"
        } else {
            Write-Host "Using existing App Service Plan: $planName" -ForegroundColor Yellow
        }
