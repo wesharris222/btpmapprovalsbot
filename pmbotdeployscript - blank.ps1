@@ -75,8 +75,8 @@ $BeyondTrustBaseUrl = ""                # Base URL for BeyondTrust API (https://
 $BeyondTrustClientId = ""               # BeyondTrust Client ID
 $BeyondTrustClientSecret = ""           # BeyondTrust Client Secret
 
-# Teams Settings
-$TeamsChannelName = "Bots Mansion"                  # Name of Teams channel to create
+# Teams Settings - not currently used
+$TeamsChannelName = "Bots Mansion"                  # Name of Teams channel to create (not in use currently)
 
 # Validate required variables are set
 $requiredVariables = @(
@@ -289,7 +289,7 @@ function New-AzureResources {
            --id $appId `
            --display-name "BotSecret" | ConvertFrom-Json
 
-       # Create Storage Account (ensure name is valid)
+       # Create Storage Account (ensure name is valid - global variable in azure)
        Write-Host "Creating Storage Account..." -ForegroundColor Yellow
        $storageAccountName = ($BotName.ToLower() -replace '[^a-z0-9]', '') + "stor"
        if ($storageAccountName.Length -gt 24) {
@@ -755,10 +755,11 @@ try {
     Write-Host "Teams manifest package created at: $manifestPath" -ForegroundColor Green
     
     Write-Host "`nNext Steps:" -ForegroundColor Yellow
-    Write-Host "1. Create a new team in Microsoft Teams manually" -ForegroundColor Yellow
-    Write-Host "2. Go to Teams Admin Center" -ForegroundColor Yellow
-    Write-Host "3. Upload the manifest package from: $manifestPath" -ForegroundColor Yellow
-    Write-Host "4. Add the bot to your team" -ForegroundColor Yellow
+	Write-Host "1. Login to Azure and enable the MS Teams channel for your bot by navigating to your bot resource (Azure Bot type) and select Settings->Channels and add the MS Teams Channel" -ForegroundColor Yellow
+	Write-Host "2. Go to Teams Admin Center (https://admin.teams.microsoft.com)" -ForegroundColor Yellow
+	Write-Host "3. Create a new Team in MS Teams manually (Teams->Manage Teams)" -ForegroundColor Yellow
+	Write-Host "4. Upload the manifest package from: $manifestPath" -ForegroundColor Yellow
+	Write-Host "5. Add the bot to your team" -ForegroundColor Yellow
 
     Write-Host "`nDeployment completed successfully!" -ForegroundColor Green
 }	
