@@ -56,13 +56,13 @@ Write-Host "PowerShell environment check passed. Proceeding with deployment..." 
 # Bot and Azure Resource Settings
 $BotName = ""                            # Name for the bot (will be used for various resources)
 $ResourceGroupName = ""                  # Azure Resource Group name
-$Location = "westus"                     # Azure region (e.g., 'westus') - dont change due to bot location restrictions
+$Location = "westus"                     # Azure region (e.g., 'eastus')
 $SubscriptionId = ""                     # Azure Subscription ID
 $TenantId = ""                          # Azure AD Tenant ID
 
 # Repository Settings
 $GitRepoUrl = "https://github.com/wesharris222/btpmapprovalsbot"  # URL to the git repository
-$LocalRepoPath = ""                      # Local path where repo will be cloned (e.g., "C:\Projects\btpmapprovalsbot")
+$LocalRepoPath = "c:\temp"                      # Local path where repo will be cloned (e.g., "C:\Projects\btpmapprovalsbot")
 
 # Ensure local repository path exists
 if (-not (Test-Path $LocalRepoPath)) {
@@ -75,8 +75,8 @@ $BeyondTrustBaseUrl = ""                # Base URL for BeyondTrust API (https://
 $BeyondTrustClientId = ""               # BeyondTrust Client ID
 $BeyondTrustClientSecret = ""           # BeyondTrust Client Secret
 
-# Teams Settings - not currently used
-$TeamsChannelName = "Bots Mansion"                  # Name of Teams channel to create (not in use currently)
+# Teams Settings
+$TeamsChannelName = "Bots Mansion"                  # Name of Teams channel to create
 
 # Validate required variables are set
 $requiredVariables = @(
@@ -289,7 +289,7 @@ function New-AzureResources {
            --id $appId `
            --display-name "BotSecret" | ConvertFrom-Json
 
-       # Create Storage Account (ensure name is valid - global variable in azure)
+       # Create Storage Account (ensure name is valid)
        Write-Host "Creating Storage Account..." -ForegroundColor Yellow
        $storageAccountName = ($BotName.ToLower() -replace '[^a-z0-9]', '') + "stor"
        if ($storageAccountName.Length -gt 24) {
@@ -344,7 +344,7 @@ function New-AzureResources {
                --name $planName `
                --resource-group $ResourceGroupName `
                --location $Location `
-               --sku "F1"
+               --sku "B1"
        } else {
            Write-Host "Using existing App Service Plan: $planName" -ForegroundColor Yellow
        }
