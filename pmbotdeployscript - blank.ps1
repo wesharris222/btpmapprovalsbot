@@ -62,7 +62,7 @@ $TenantId = ""                          # Azure AD Tenant ID
 
 # Repository Settings
 $GitRepoUrl = "https://github.com/wesharris222/btpmapprovalsbot"  # URL to the git repository
-$LocalRepoPath = "c:\temp"                      # Local path where repo will be cloned (e.g., "C:\Projects\btpmapprovalsbot")
+$LocalRepoPath = ""                      # Local path where repo will be cloned (e.g., "C:\Projects\btpmapprovalsbot")
 
 # Ensure local repository path exists
 if (-not (Test-Path $LocalRepoPath)) {
@@ -344,7 +344,7 @@ function New-AzureResources {
                --name $planName `
                --resource-group $ResourceGroupName `
                --location $Location `
-               --sku "B1"
+               --sku "F1"
        } else {
            Write-Host "Using existing App Service Plan: $planName" -ForegroundColor Yellow
        }
