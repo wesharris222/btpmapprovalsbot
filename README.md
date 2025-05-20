@@ -26,8 +26,6 @@ Although installing and configuring Microsoft Teams is outside the scope of this
 
   Please note that this may show as a separate executable on your system once installed.
 
-  ![PowerShell 7](images/image-20250214-211826.png)
-
   This can also be installed in the context of an IDE (VSCode, etc) but for the purposes of this guide we will use the Powershell 7 application.
 
 - **Node.js LTS** (20.11.1 or later)
@@ -84,7 +82,7 @@ Here is where you can find some of the above values:
 ![tenantid](images/tenantid.png)
 
 **BeyondTrust API Settings:**
-- Navigate to https://demo2.pm.beyondtrustcloud.com (or a different site, although I'd recommend this one, as it should always be set to using the JIT Application workflow instead of the SNOW workflow)
+- Navigate to your PM Cloud site
 - Navigate to Configuration, API Settings and create a new API Key
 - Take down the Client ID and Secret, and make sure you only enable JIT Access as Full Access. No other API permissions are required.
 
