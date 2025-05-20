@@ -15,7 +15,7 @@ There are several prerequisites to outline prior to working through the deployme
 - 1 user who is a global administrator of this tenant
 - A separate Microsoft Teams application connected back to this Azure tenant
 
-Our Visual Studio subscriptions include an E5 license which can be used to support this Teams environment.
+A MSDN Visual Studio subscription includes an E5 license which can be used to support this Teams environment.
 
 Although installing and configuring Microsoft Teams is outside the scope of this document, you can find Microsoft's documentation here:
 [Assign or unassign licenses for users in the Microsoft 365 admin center - Microsoft 365 admin](https://docs.microsoft.com/en-us/microsoft-365/admin/manage/assign-licenses-to-users)
