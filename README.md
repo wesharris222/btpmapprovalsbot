@@ -6,7 +6,7 @@ This document will step you through the deployment of a Proof-of-Concept JIT App
 
 ## Prerequisites
 
-There are several prerequisites to outline prior to working through the deployment. Although the script will prompt to install these below items, it is recommended that you install these prior to running the deployment scripts to ensure a successful deployment. For the SE team, this also requires an active Visual Studio Azure Credit subscription to avoid any charges for Azure usage.
+There are several prerequisites to outline prior to working through the deployment. Although the script will prompt to install these below items, it is recommended that you install these prior to running the deployment scripts to ensure a successful deployment. 
 
 ### Requirements and Dependencies
 
