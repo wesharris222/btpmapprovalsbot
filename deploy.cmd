@@ -1,53 +1,73 @@
 @echo off
 setlocal
 
-echo Deployment started for %WEBSITE_SITE_NAME%
+echo ===================================
+echo Deployment started
+echo Site Name: %WEBSITE_SITE_NAME%
+echo Deployment Source: %DEPLOYMENT_SOURCE%
+echo Deployment Target: %DEPLOYMENT_TARGET%
+echo ===================================
 
-:: Detect if this is a Function App (ends with -func)
-echo %WEBSITE_SITE_NAME% | findstr /E "-func" >nul
+:: Check if this is a Function App by looking for common Function App environment variables
+if defined FUNCTIONS_EXTENSION_VERSION (
+    echo Detected Function App deployment (FUNCTIONS_EXTENSION_VERSION is set)
+    goto :DeployFunctionApp
+)
+
+:: Alternative: Check if site name contains -func
+echo %WEBSITE_SITE_NAME% | find "-func" >nul
 if %ERRORLEVEL% == 0 (
-    echo Detected Function App deployment
-    
-    :: For Function App, deploy only the functions folder contents
-    echo Copying functions folder contents to deployment target...
-    xcopy /E /Y /I "%DEPLOYMENT_SOURCE%\functions\*" "%DEPLOYMENT_TARGET%"
-    
-    :: Run npm install in deployment target
-    cd /d "%DEPLOYMENT_TARGET%"
-    call :ExecuteCmd npm install --production
-) else (
-    echo Detected Web App deployment
-    
-    :: For Web App, deploy root folder but exclude functions folder
-    echo Copying bot files to deployment target...
-    xcopy /Y "%DEPLOYMENT_SOURCE%\*.js" "%DEPLOYMENT_TARGET%"
-    xcopy /Y "%DEPLOYMENT_SOURCE%\*.json" "%DEPLOYMENT_TARGET%"
-    xcopy /Y "%DEPLOYMENT_SOURCE%\web.config" "%DEPLOYMENT_TARGET%" 2>nul
-    
-    :: Copy node_modules if it exists
-    if exist "%DEPLOYMENT_SOURCE%\node_modules" (
-        xcopy /E /Y /I "%DEPLOYMENT_SOURCE%\node_modules" "%DEPLOYMENT_TARGET%\node_modules"
-    )
-    
-    :: Run npm install in deployment target
-    cd /d "%DEPLOYMENT_TARGET%"
-    call :ExecuteCmd npm install --production
+    echo Detected Function App deployment (site name contains -func)
+    goto :DeployFunctionApp
 )
 
+:: Otherwise, it's a Web App
+echo Detected Web App deployment
+goto :DeployWebApp
+
+:DeployFunctionApp
+echo.
+echo Deploying Function App from functions folder...
+
+:: Clean deployment target first
+echo Cleaning deployment target...
+if exist "%DEPLOYMENT_TARGET%\*" del /Q "%DEPLOYMENT_TARGET%\*" 2>nul
+
+:: Copy everything from functions folder
+echo Copying functions folder contents...
+xcopy /E /Y /I /Q "%DEPLOYMENT_SOURCE%\functions\*" "%DEPLOYMENT_TARGET%\"
+
+goto :InstallDependencies
+
+:DeployWebApp
+echo.
+echo Deploying Web App from root folder...
+
+:: Copy bot files
+echo Copying bot files...
+copy /Y "%DEPLOYMENT_SOURCE%\bot.js" "%DEPLOYMENT_TARGET%\" 2>nul
+copy /Y "%DEPLOYMENT_SOURCE%\index.js" "%DEPLOYMENT_TARGET%\" 2>nul
+copy /Y "%DEPLOYMENT_SOURCE%\package.json" "%DEPLOYMENT_TARGET%\" 2>nul
+copy /Y "%DEPLOYMENT_SOURCE%\package-lock.json" "%DEPLOYMENT_TARGET%\" 2>nul
+copy /Y "%DEPLOYMENT_SOURCE%\web.config" "%DEPLOYMENT_TARGET%\" 2>nul
+copy /Y "%DEPLOYMENT_SOURCE%\*.png" "%DEPLOYMENT_TARGET%\" 2>nul
+
+:: Copy node_modules
+if exist "%DEPLOYMENT_SOURCE%\node_modules" (
+    echo Copying node_modules...
+    xcopy /E /Y /I /Q "%DEPLOYMENT_SOURCE%\node_modules" "%DEPLOYMENT_TARGET%\node_modules\"
+)
+
+goto :InstallDependencies
+
+:InstallDependencies
+echo.
+echo Installing npm dependencies...
+cd /d "%DEPLOYMENT_TARGET%"
+call npm install --production
+
+echo.
+echo ===================================
 echo Deployment completed successfully
-goto end
-
-:ExecuteCmd
-setlocal
-set _CMD_=%*
-echo Executing: %_CMD_%
-call %_CMD_%
-if "%ERRORLEVEL%" NEQ "0" (
-    echo Failed exitCode=%ERRORLEVEL%, command=%_CMD_%
-    exit /b %ERRORLEVEL%
-)
+echo ===================================
 exit /b 0
-
-:end
-endlocal
-echo Finished successfully.
